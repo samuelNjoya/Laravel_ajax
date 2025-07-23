@@ -1,4 +1,9 @@
-new DataTable('#example');
+// new DataTable('#example');
+
+$('#example').DataTable({
+  order: [[0, 'desc']] // trie la première colonne (id) décroissante
+});
+
 
  $(document).ready(function() {
 
@@ -139,6 +144,37 @@ new DataTable('#example');
         }
     });
 
+//pour afficher les details
+    $(function() {
+  $('.btn-details').on('click', function() {
+    var filmId = $(this).data('id');
+
+    // Requête AJAX pour récupérer les détails
+    $.ajax({
+      url: '/films/' + filmId,
+      type: 'GET',
+      success: function(film) {
+        // Remplir le contenu de la modale
+        $('#filmTitle').text(film.titre);
+        $('#filmDescription').text(film.description);
+
+        if(film.photo_url) {
+          $('#filmImage').attr('src', film.photo_url).show();
+        } else {
+          $('#filmImage').hide(); // pas d'image on masque l'élément
+        }
+
+
+        // Afficher la modale Bootstrap
+        var modal = new bootstrap.Modal(document.getElementById('filmDetailModal'));
+        modal.show();
+      },
+      error: function() {
+        alert('Erreur lors de la récupération des détails du film.');
+      }
+    });
+  });
+});
 
     (() => {
       'use strict'

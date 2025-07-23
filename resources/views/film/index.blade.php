@@ -23,16 +23,18 @@
     <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- SweetAlert2 CSS et JS via CDN -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css"  />
 
 
     <script defer src="{{ asset('scripts/app.js') }}"></script>
-    <title>Document</title>
+    <title>{{!empty($meta_title) ? $meta_title : '' }} - CINE</title>
 </head>
 <body>
 
-      <button class="btn btn-primary mb-3" id="addNewFilmBtn">Ajouter un film</button>
+      
 
     <div class="container mt-5">
+        <button class="btn btn-primary mb-3" id="addNewFilmBtn"><i class="fas fa-plus me-1"></i>Ajouter un film</button>
         <table id="example" class="table table-striped">
         <thead>
             <tr>
@@ -40,6 +42,7 @@
                 <th>Photo</th>
                 <th>Titre</th>
                 <th>Description</th>
+                <th>Date creation</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -56,9 +59,11 @@
                 </td>
                 <td>{{ $film->titre }}</td>
                 <td>{{ $film->description }}</td>
+                <td >{{ date('d-m-y H:i A', strtotime($film->created_at)) }}</td>
                 <td>
-                    <button class="btn btn-info btn-sm editFilmBtn" data-id="{{ $film->id }}">Modifier</button>
-                    <button class="btn btn-danger btn-sm deleteFilmBtn" data-id="{{ $film->id }}">Supprimer</button>
+                    <button class="btn btn-success btn-sm btn-details" data-id="{{ $film->id }}"><i class="fa-regular fa-eye"></i></i></button>
+                    <button class="btn btn-info btn-sm editFilmBtn" data-id="{{ $film->id }}"><i class="fas fa-edit"></i></button>
+                    <button class="btn btn-danger btn-sm deleteFilmBtn" data-id="{{ $film->id }}"><i class="fas fa-trash"></i></button>
                 </td>
             </tr>
         @endforeach
@@ -103,5 +108,26 @@
         </form>
     </div>
 </div>
+
+<!-- Modal Bootstrap -->
+<div class="modal fade" id="filmDetailModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="filmTitle"></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+      </div>
+      <div class="modal-body d-flex">
+        <img id="filmImage" src="" alt="Image du film" style="max-width: 200px; margin-right: 15px; object-fit: cover; border-radius: 10px;">
+        <div id="filmDescription" style="flex-grow:1;"></div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>

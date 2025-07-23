@@ -11,8 +11,9 @@ class FilmController extends Controller
     // Liste de tous les films
     public function index()
     {
-        $films = Film::orderBy('created_at', 'desc')->get();
-        return view('film.index', compact('films'));
+        $data['meta_title'] = "Liste films";
+        $data['films'] = Film::orderBy('id', 'desc')->get();
+        return view('film.index', $data);
     }
 
     // Créer un film
@@ -41,12 +42,16 @@ class FilmController extends Controller
 
         // Réponse JSON pour AJAX + message succès
         return response()->json(['success' => 'Film ajouté avec succès']);
+       
     }
 
     // Affiche un film pour l'édition via AJAX
     public function show($id)
     {
         $film = Film::findOrFail($id);
+            // Ajoute URL image complète à retourner dans la réponse JSON
+        $film->photo_url = $film->photo ? asset('upload/films/' . $film->photo) : null;
+        
         return response()->json($film);
     }
 
